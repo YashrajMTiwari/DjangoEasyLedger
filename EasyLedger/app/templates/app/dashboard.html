@@ -1,0 +1,130 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary fw-bold">Dashboard</h2>
+
+    <div class="row">
+        <!-- Cards Section (Left Side) -->
+        <div class="col-md-4">
+            <div class="container">
+                <!-- Total Customers Card -->
+                <div class="card bg-primary text-white mb-4 shadow-lg rounded">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-2">Total Customers</h5>
+                                <h3 class="display-6 fw-bold">{{ customer_count }}</h3>
+                            </div>
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paid Sales Card -->
+                <div class="card bg-success text-white mb-4 shadow-lg rounded">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-2">Paid Sales</h5>
+                                <h3 class="display-6 fw-bold">{{ paid_sales_count }}</h3>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unpaid Sales Card -->
+                <div class="card bg-warning text-dark mb-4 shadow-lg rounded">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-2">Unpaid Sales</h5>
+                                <h3 class="display-6 fw-bold">{{ unpaid_sales_count }}</h3>
+                            </div>
+                            <i class="fas fa-exclamation-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Total Sales Card -->
+                <div class="card bg-info text-white mb-4 shadow-lg rounded">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-2">Today's Total Sales</h5>
+                                <h3 class="display-6 fw-bold">{{ total_sales }} INR</h3>
+                            </div>
+                            <i class="fas fa-wallet fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Overview Section (Right Side) -->
+        <div class="col-md-8">
+            <!-- Sales Overview Dropdown Section -->
+            <div class="container mb-4">
+                <div class="card bg-secondary text-light shadow-lg rounded">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Sales Overview</h5>
+                        <form method="get" class="d-flex flex-column mb-3">
+                            <label for="period" class="form-label text-light">Select Sales Period</label>
+                            <select name="period" id="period" onchange="this.form.submit()" class="form-select bg-dark text-light border-light">
+                                <option value="daily" {% if period == 'daily' %}selected{% endif %}>Today</option>
+                                <option value="monthly" {% if period == 'monthly' %}selected{% endif %}>This Month</option>
+                                <option value="yearly" {% if period == 'yearly' %}selected{% endif %}>This Year</option>
+                            </select>
+                        </form>
+                        <p class="mb-4 text-light">
+                            Showing sales for: 
+                            {% if period == 'daily' %}Today{% elif period == 'monthly' %}This Month{% elif period == 'yearly' %}This Year{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Data Table Section -->
+            <div class="container">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-dark table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Total Amount (INR)</th>
+                                <th>Purchase Date</th>
+                                <th>Payment Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in sales %}
+                                <tr>
+                                    <td>{{ sale.customer.name }}</td>
+                                    <td>{{ sale.product.name }}</td>
+                                    <td>{{ sale.quantity }}</td>
+                                    <td>{{ sale.total_amount }}</td>
+                                    <td>{{ sale.purchase_date }}</td>
+                                    <td>
+                                        {% if sale.payment_status %}
+                                            <span class="badge bg-success">Paid</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Unpaid</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No sales available for the selected period.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

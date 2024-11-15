@@ -1,0 +1,8 @@
+<!-- no_products.html -->
+{% extends 'app/base.html' %}
+
+{% block content %}
+    <h1>No Products Available</h1>
+    <p>You need to create products before making a purchase.</p>
+    <a href="{% url 'product_create' %}">Create a Product</a>
+{% endblock %}

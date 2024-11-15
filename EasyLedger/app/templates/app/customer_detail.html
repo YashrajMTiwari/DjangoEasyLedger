@@ -1,0 +1,69 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-info fw-bold">{{ customer.name }}'s Purchases</h2>
+
+    <!-- Purchases Table Card -->
+    <div class="card mb-4 shadow-lg rounded" style="background-color: #2e2e2e;">
+        <div class="card-header bg-dark text-info border-0">
+            <h3 class="mb-0">Purchases</h3>
+        </div>
+        <div class="card-body" style="background-color: #3a3a3a;">
+            {% if purchases %}
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-dark table-striped table-bordered">
+                        <thead class="bg-secondary text-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Total Amount (₹)</th>
+                                <th>Payment Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for purchase in purchases %}
+                                <tr>
+                                    <td class="fw-bold text-light">{{ purchase.product.name }}</td>
+                                    <td class="text-light">{{ purchase.quantity }}</td>
+                                    <td class="text-success fw-bold">₹{{ purchase.total_amount }}</td>
+                                    <td>
+                                        {% if purchase.payment_status %}
+                                            <span class="badge bg-success text-dark">Paid</span>
+                                        {% else %}
+                                            <span class="badge bg-danger text-light">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'purchase_delete' purchase.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-light">No purchases found for this customer.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Add New Purchase Form Card -->
+    <div class="card shadow-lg rounded" style="background-color: #2e2e2e;">
+        <div class="card-header bg-dark text-info border-0">
+            <h3>Add New Purchase</h3>
+        </div>
+        <div class="card-body" style="background-color: #3a3a3a;">
+            <form method="POST" action="{% url 'purchase_create' customer.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-info">Add Purchase</button>
+                <a href="{% url 'customer_list' %}" class="btn btn-secondary">Back to Customers</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
