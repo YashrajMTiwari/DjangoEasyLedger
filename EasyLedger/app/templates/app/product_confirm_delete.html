@@ -3,8 +3,6 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Confirm Deletion</h2>
-
-    <!-- Card for delete confirmation -->
     <div class="card">
         <div class="card-header">
             <h5 class="mb-0">Are you sure you want to delete {{ product.name }}?</h5>
@@ -12,10 +10,7 @@
         <div class="card-body">
             <form method="POST">
                 {% csrf_token %}
-                <!-- Submit button to confirm deletion -->
                 <button type="submit" class="btn btn-danger">Delete</button>
-
-                <!-- Cancel button to redirect to the product list -->
                 <a href="{% url 'product_list' %}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
