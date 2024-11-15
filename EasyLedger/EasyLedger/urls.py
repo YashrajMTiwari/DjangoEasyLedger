@@ -21,16 +21,11 @@ from django.contrib.auth import views as auth_views
 from app import views
 
 urlpatterns = [
-    # Admin URL
     path('admin/', admin.site.urls),
+    path('app/', include('app.urls')), 
 
-    # App URLs
-    path('app/', include('app.urls')),  # Include the app's urls.py for app-specific routes
-
-    # Redirect to dashboard from the root URL
-    path('', lambda request: redirect('dashboard' if request.user.is_authenticated else 'home')),  # Redirect to the dashboard on accessing the root URL
-
-    # Authentication URLs
+    # User Authentication, Login and Register Urls
+    path('', lambda request: redirect('dashboard' if request.user.is_authenticated else 'home')), 
     path('login/', auth_views.LoginView.as_view(template_name='app/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),
