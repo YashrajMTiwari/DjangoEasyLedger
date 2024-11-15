@@ -42,16 +42,16 @@ class Purchase(models.Model):
         if self.quantity <= 0:
             raise ValidationError("Quantity must be greater than 0.")
 
-        self.total_amount = self.product.price * self.quantity  # Calculate total amount
+        self.total_amount = self.product.price * self.quantity 
 
     def save(self, *args, **kwargs):
-        self.clean()  # Ensure validation
+        self.clean() 
         super().save(*args, **kwargs)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
-    whatsapp_number = models.CharField(max_length=15, blank=True, null=True)  # Added WhatsApp number
+    whatsapp_number = models.CharField(max_length=15, blank=True, null=True) 
 
     def __str__(self):
         return self.user.username
