@@ -1,10 +1,8 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-<div class="container-custom mt-4"> <!-- Custom container for more width on larger screens -->
+<div class="container-custom mt-4"> 
     <h2 class="mb-4 text-light">Product List</h2>
-
-    <!-- Add New Product Card -->
     <div class="card bg-secondary text-light mb-4 shadow-lg">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -15,8 +13,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Product Table -->
     {% if products %}
         <div class="card bg-secondary text-light shadow-lg mb-4">
             <div class="card-body">
@@ -35,11 +31,9 @@
                                     <td>{{ product.name }}</td>
                                     <td>₹{{ product.price }}</td>
                                     <td>
-                                        <!-- Edit link -->
                                         <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <!-- Delete link -->
                                         <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash-alt"></i> Delete
                                         </a>
