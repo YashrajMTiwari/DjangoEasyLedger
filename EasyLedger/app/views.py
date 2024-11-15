@@ -16,21 +16,22 @@ def home(request):
     return render(request, 'app/landingpage.html')
 
 
-# List all customers
+# Customer Views
+
+# List Customers
 @login_required
 def customer_list(request):
     customers = Customer.objects.filter(shop_owner=request.user)
     return render(request, 'app/customer_list.html', {'customers': customers})
 
-
-# Create a new customer
+# Create New Customer
 @login_required
 def customer_create(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
             customer = form.save(commit=False)
-            customer.shop_owner = request.user  # Assign the logged-in user as the shop owner
+            customer.shop_owner = request.user 
             customer.save()
             return redirect('customer_list')
     else:
@@ -38,7 +39,7 @@ def customer_create(request):
     return render(request, 'app/customer_form.html', {'form': form})
 
 
-# Update an existing customer
+# Update Customer Data
 @login_required
 def customer_update(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
@@ -52,7 +53,7 @@ def customer_update(request, pk):
     return render(request, 'app/customer_form.html', {'form': form})
 
 
-# Delete a customer
+# Remove Customer
 @login_required
 def customer_delete(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
@@ -65,28 +66,29 @@ def customer_delete(request, pk):
     return render(request, 'app/customer_confirm_delete.html', {'customer': customer})
 
 
-# Add Product View
+# Product Views
+# Add New Product
 @login_required
 def product_create(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request=request)  # Pass request to form
+        form = ProductForm(request.POST, request=request)  
         if form.is_valid():
             form.save()
             return redirect('product_list')
     else:
-        form = ProductForm(request=request)  # Pass request to form
+        form = ProductForm(request=request) 
 
     return render(request, 'app/product_form.html', {'form': form})
 
 
-# List Products View
+# List Products
 @login_required
 def product_list(request):
-    products = Product.objects.filter(shop_owner=request.user)  # Only show products for the logged-in user
+    products = Product.objects.filter(shop_owner=request.user)  
     return render(request, 'app/product_list.html', {'products': products})
 
 
-# Remove Product View
+# Remove Product
 @login_required
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -98,6 +100,7 @@ def product_delete(request, pk):
         return redirect('product_list')
     return render(request, 'app/product_confirm_delete.html', {'product': product})
 
+# Purchase View
 @login_required
 def purchase_create(request, customer_id):
     customer = get_object_or_404(Customer, id=customer_id)
@@ -107,10 +110,9 @@ def purchase_create(request, customer_id):
         if form.is_valid():
             product = form.cleaned_data['product']
             quantity = form.cleaned_data['quantity']
-            total_amount = form.cleaned_data['total_amount']  # Calculated in form, not shown on page
+            total_amount = form.cleaned_data['total_amount']  
             payment_status = form.cleaned_data['payment_status']
 
-            # Save the purchase
             purchase = Purchase(
                 customer=customer,
                 product=product,
@@ -133,7 +135,7 @@ def customer_detail(request, pk):
     return render(request, 'app/customer_detail.html', {'customer': customer, 'purchases': purchases})
 
 
-# Remove Purchase View
+# Remove Purchase
 @login_required
 def purchase_delete(request, pk):
     purchase = get_object_or_404(Purchase, pk=pk)
@@ -146,7 +148,7 @@ def purchase_delete(request, pk):
     return render(request, 'app/purchase_confirm_delete.html', {'purchase': purchase})
 
 
-# Update Product View
+# Update Product
 @login_required
 def product_update(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -167,7 +169,7 @@ def dashboard(request):
     customer_count = Customer.objects.filter(shop_owner=request.user).count()
     today = date.today()
 
-    period = request.GET.get('period', 'daily')  # default to 'daily' if not specified
+    period = request.GET.get('period', 'daily') 
 
     if period == 'daily':
         sales = Purchase.objects.filter(purchase_date=today, product__shop_owner=request.user)
